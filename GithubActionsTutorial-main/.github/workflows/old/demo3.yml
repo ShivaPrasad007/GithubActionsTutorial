@@ -1,0 +1,45 @@
+# This workflow deploys the application to EC2 using easingthemes action in GitHub Actions.
+name: Deploy to EC2 using easingthemes
+
+on:
+  push:
+    branches: [some-branch]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy files via SSH
+        uses: easingthemes/ssh-deploy@v2.2.11
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.SSH_HOST }}
+          REMOTE_USER: ${{ secrets.SSH_USERNAME }}
+          SOURCE: "./"
+          TARGET: "/var/www/itdefined.org/"
+          ARGS: "-rlptDzv --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r --delete --rsync-path='sudo rsync'"
+          EXCLUDE: ".git"
+
+
+# Simplified Explanation:
+# The rsync options in the ARGS string control how files are transferred and synchronized. Here's what each part does:
+
+# -r: Copies directories recursively (includes all subdirectories and files).
+# -l: Preserves symbolic links.
+# -p: Preserves file permissions.
+# -t: Preserves modification times.
+# -D: Preserves device files and special files.
+# -z: Compresses file data during transfer to save bandwidth.
+# -v: Verbose output (shows detailed transfer information).
+# --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r: Sets specific permissions on the destination:
+
+# Directories (D): User (u) gets read/write/execute (rwx), group (g) and others (o) get read/execute (rx).
+# Files (F): User gets read/write (rw), group and others get read-only (r).
+
+
+# --delete: Deletes files in the destination that no longer exist in the source.
+# --rsync-path='sudo rsync': Runs rsync with sudo on the remote server, ensuring elevated permissions.
