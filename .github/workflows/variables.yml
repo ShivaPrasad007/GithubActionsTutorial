@@ -1,0 +1,17 @@
+# This workflow demonstrates the use of various types of variables in GitHub Actions, including environment variables, secrets, and inputs.
+name: GitHub Actions - All Variables Demo
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository variables demo
+        run: |
+          echo "APP_NAME        : ${{ vars.APP_NAME }}"
+          echo "DEPLOY_REGION   : ${{ vars.DEPLOY_REGION }}"
+
+      - name: Secrets demo (masked)
+        run: |
+          echo "Secret length is: ${{ secrets.DEMO_SECRET }}"

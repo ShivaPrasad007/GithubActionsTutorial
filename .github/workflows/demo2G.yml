@@ -1,0 +1,23 @@
+# This workflow demonstrates the combined use of inputs, environment variables, secrets, and variables in GitHub Actions.
+name: Combined Inputs, Env, Secrets, and Variables
+run-name: Combined Inputs, Env, Secrets, and Variables
+on:
+  workflow_dispatch:
+    inputs:
+      service:
+        description: "Service Name"
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      DEPLOY_ENV: staging
+    steps:
+      - name: Show input, env, and variables
+        run: |
+          echo "Service: ${{ github.event.inputs.service }}"
+          echo "Env: $DEPLOY_ENV"
+          echo "Token: ${{ secrets.DEPLOY_TOKEN }}"
+          echo "Org Variable: ${{ vars.ORGANIZATION_NAME }}"
+          echo "Repo Variable: ${{ vars.REPO_CONFIG }}"
