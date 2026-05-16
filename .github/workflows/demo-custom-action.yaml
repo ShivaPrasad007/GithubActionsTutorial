@@ -15,7 +15,7 @@ jobs:
         
       - name: Run Demo Custom Action
         id: demo-step
-        uses: ./.github/actions/demo-action
+        uses: ./.github/actions
         with:
           name: "ITD"
       
